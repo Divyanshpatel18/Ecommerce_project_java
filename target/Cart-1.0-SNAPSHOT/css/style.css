@@ -1,0 +1,351 @@
+@import url('https://fonts.googleapis.com/css2?family=Acme&family=Akaya+Telivigala&family=Dosis:wght@200;300;400;500;600;700&family=Monoton&family=Shizuru&family=Skranji&display=swap');
+*,*:before,*:after{
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+:active,:hover,:focus{
+    outline: 0;
+    offset: 0;
+}
+a:hover{
+    color: #ff553e;
+}
+ul,ol{
+    margin: 0;
+    padding: 0;
+}
+
+                        /* define variables */
+
+html{
+    scroll-behavior: smooth;
+}
+body{
+    font-weight: 400;
+    font-size: 100%;
+    font-family: 'Dosis',sans-serif;
+
+}
+/* 
+===================================
+    CUSTOM SCROLLBAR 
+    ====================== */
+    ::-webkit-scrollbar{
+        width: 0.3125rem;
+    }
+    ::-webkit-scrollbar-track{
+        background:#fff;
+    }
+    ::-webkit-scrollbar-thumb{
+        background: #ff553e;
+    }
+
+    /* 
+===================================
+    CUSTOM CSS DESIGN 
+    ====================== */
+
+    h1{
+        font-size: 3rem;
+        font-weight: 400;
+        margin-bottom: 1rem;
+        text-transform: uppercase;
+        color: #fff;
+
+    }
+    h2{
+        font-size: 1.5625rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        color: #fff;
+        line-height: 2.5rem;
+        
+    }
+    h4{
+        font-size: 1.125rem;
+        font-weight: 400;
+        margin-bottom: 0.9375rem;
+        text-transform: capitalize;
+        color:#fff;
+        transition: all .3s linear;
+
+    }
+    h5{
+        font-size: 1.125rem;
+        font-weight: 400;
+        margin-bottom: 0.9375rem;
+        text-transform: capitalize;
+        color:#fff;
+
+    }
+    p{
+        font-size: 1rem;
+        font-weight: 400;
+        line-height: 1.75rem;
+        margin-bottom: 0.9375rem;
+        opacity: 0.8;
+        color:#fff;
+
+    }
+    .main-btn{
+        height: 40px;
+        line-height: 40px;
+        font-size: 1.125rem;
+        display: inline-block;
+        color:#fff;
+        font-weight: 700;
+        text-transform: uppercase;
+        padding: 0 30px;
+        position: relative;
+        text-decoration: none;
+    }
+
+.main-btn::before,.main-btn::after{
+    position: absolute;
+    top: 50%;
+    background-color: rgba(255, 255, 255, .3);
+    left: 0;
+    width: 100%;
+    height: 1px;
+    content: "";
+    transition: all .5s ease-in 0s;
+    -webkit-transition:all .5s ease-in 0s ;
+    transform: translateY(-20px);
+    -webkit-transform: translateY(-20px);
+}
+.main-btn::after{
+    transform: translateY(20px);
+    -webkit-transform:translateY(20px) ;
+}
+.main-btn:hover::before{
+    transform: rotate(20deg);
+    -webkit-transform: rotate(20deg);
+    background-color: #ff553e ;
+}
+.main-btn:hover::after{
+    transform: rotate(-20deg);
+    -webkit-transform: rotate(-20deg);
+    background-color: #ff553e ;
+}
+.main-btn:hover{
+   color: #ff553e;
+}
+
+.wrapper{
+    padding-top: 4rem;
+    padding-bottom: 4rem;
+    background-color:#333;
+
+}
+.text-content{
+    width: 60%;
+    margin: auto;
+}
+
+
+/* ==========================
+    HEADER DESIGN */
+
+    .top-header{
+        background-color:#333;
+    }
+    .top-header span{
+        font-size: 0.875rem;
+        color: #fff;
+        letter-spacing:0.1062rem;
+    }
+    .navigation{
+        position: fixed;
+        width: 100%;
+        left: 0;
+        z-index: 1000;
+        transition: all 0.3s ease-out;
+        -webkit-transition: all 0.3s ease-out;
+
+    }
+    .navigation .nav-item{
+        padding: 0 0.5rem;
+        transition:all 200ms linear;
+    }
+    .navbar-toggler:focus{
+        outline: unset;
+        border: none;
+        box-shadow: none;
+    }
+    .navigation .nav-link{
+        padding-top: 00.9375rem;
+        font-size: 0.875rem;
+        font-weight: 400;
+        text-transform: uppercase;
+        color: #fff;
+        letter-spacing: 0.0625rem;
+    }
+    .navigation .nav-link:hover,
+    .navigation .nav-link.active{
+   color:#ff553e;
+    }
+    
+             /* CHANGE NAVBAR ON SCROLLING */
+    
+.navigation.scroll-on{
+    position: fixed;
+    background-color:#000;
+    top:0;
+    left:0;
+    width: 100%;
+    box-shadow: 0 0.0125rem 1.75rem 1 rgba(0, 0, 0, 0.09);
+    transition: all .15s ease-in-out 0s;
+}
+.navigation.scroll-on .nav-link:hover,
+.navigation.scroll-on .nav-link.active{
+color:#ff553e;
+}
+/* =====================
+    TOP BANNER DESIGN
+    ====================== */
+
+    #home .carousel-caption{
+        top: 12rem;
+    }
+    #home .carousel-caption p{
+        max-width: 36.25rem;
+        margin:1.0625rem auto; 
+    }
+
+/* ====================================
+    NEW ARRIVAL SECTION BEGIN
+    ============================ */
+    .new-arrivals .banner-info{
+        bottom: 30px;
+        margin: auto;
+        width: 100%;
+        position: absolute;
+        z-index: 9;
+        padding: 0 15px;
+    }
+    .new-arrivals .card-banner:nth-child(2) h2,
+    .new-arrivals .card-banner:nth-child(2) p,
+    .new-arrivals .card-banner:nth-child(2) a{
+        color:#000;
+    }
+    .new-arrivals .card-banner:nth-child(2) a::before,
+    .new-arrivals .card-banner:nth-child(2) a::after{
+        background-color: #000;
+    }
+    .new-arrivals .card-banner .card-thumb,
+    .products .item-product{
+        position: relative;
+        display: block;
+        overflow: hidden;
+    }
+    .new-arrivals .card-banner .card-thumb img,
+    .products .item-product img{
+        transition: all .5s ease-out 0s;
+    }
+
+    .new-arrivals .card-banner .card-thumb img:hover,
+    .products .item-product img:hover{
+        transform: scale(1.2);
+        opacity: 0.6;
+    }
+/*
+
+=========================
+product section design */
+
+.products .wrapper{
+    background-color:#000;
+
+}
+.products .nav-tabs{
+    border: 0;
+    justify-content: center;
+}
+.products .nav-tabs .nav-link{
+    display: block;
+    padding: 0 30px;
+    border: 1px solid #fff;
+    border-radius: 20px;
+    background-color:#000;
+    color:#fff;
+    height: 34px;
+    margin: 10px;
+    line-height: 34px;
+    text-transform: uppercase;
+    text-align: center;
+
+
+}
+.products .product-info .cat-parent,
+.products .product-info .wishlist i{
+    font-size: 0.875rem;
+    color: #fff;
+    opacity: 0.6;
+    text-transform: uppercase;
+    text-decoration: none;
+}
+.products .product-title a{
+    margin: 0 0 7px;
+    display: block;
+    color: #fff;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    text-transform: uppercase;
+    text-decoration: none;
+}
+.products .rating i{
+    color:#fad632 ;
+    
+}
+.basket a{
+color:#fff;
+}
+.product-price .money{
+font-size: 14px;   
+font-style: italic;
+text-decoration: line-through;
+   }
+.product-price .discount-given{
+    
+    color: red;
+}
+.no-product{
+    margin-top: 30px;
+    word-spacing: 5px;
+    line-height: 10px;
+    font-weight: 500;
+}
+/* ============================
+ DEAL OF THE DAY CUSTOM DESIGN
+  */
+
+  .deal-of-the-day{
+    background-image: url("img-4.jpg");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+  }
+/* ==================
+  Blog section design */
+  .blog-section{
+  background-color:#000;
+  }
+
+/* ======================
+  footer section design
+  ================== */
+  .footer{
+    background-color:#333;
+  }
+  .footer .footer-social a i{
+    font-size: 1.5rem;
+    color: #fff;
+    padding: 0 1rem;
+  }
+  .footer .footer-social a:hover i{
+    color: #ff553e;
+  }
+ 
+

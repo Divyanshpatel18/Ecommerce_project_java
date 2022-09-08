@@ -1,0 +1,129 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : Jul 5, 2022, 12:44:10 PM
+    Author     : Lenovo
+*/
+@import url('https://fonts.googleapis.com/css2?family=Acme&family=Akaya+Telivigala&family=Dosis:wght@200;300;400;500;600;700&family=Monoton&family=Shizuru&family=Skranji&display=swap');
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Dosis',sans-serif;
+
+}
+/*NO ITEMS IN THE CART*/
+.no-cart{
+    text-align: center;
+    font-size: 36px;
+     margin-top:20%;
+    word-spacing: 5px;
+    line-height: 10px;
+    font-weight: 500;
+    color:white;
+}
+
+body{
+  background-color: #333;
+}
+  body   h2,h3,h5{
+    color: black;
+}
+ body p{
+    color: black;
+}
+ body h5{
+    color: black;
+}
+.remove-wish p,h5{
+    color: black;
+}
+.card-body a{
+    color: black;
+}/*
+.card{
+    background-color: #000;;
+}
+.card h2{
+    background-color: #000;;
+}
+.right-side{
+    
+} */
+
+.product-image img{
+    min-width:200px;
+    max-height: 200px;
+}
+.product-name{
+    font-weight:700;
+    font-size: 1.5rem;
+   
+}
+.product-name p{
+    font-size :0.9rem;
+    font-weight: 400;
+}
+.remove-wish p,h5{
+    font-size: 0.9rem;
+   
+}
+
+.page-link{
+    height: 30px;
+    display: flex;
+    
+    width: 34px;
+    font-size: 1rem;
+    font-weight: 500;
+    justify-content: center;
+    align-items: center;
+}
+.page-link:focus{
+    box-shadow: none;
+}
+.price-indivi{
+font-size: 1.1rem;
+}
+
+.cart-items span {
+    color: white;
+}
+
+/*ADD TO WISHLIST*/
+.redactive{
+    color:red;
+}
+
+/*
+ordering page*/
+
+         .navigation{
+        background: black;
+    }
+    .allitembody {
+        margin-top: 4%;
+    }
+    
+    .detailtop{
+        text-align: center;
+        font-weight: 600;
+        text-transform: uppercase;
+         font-size: 1.5rem;
+         word-spacing: 4px;
+         letter-spacing: 1px     
+    }
+    .form1 label{
+         font-weight: 600;
+          font-size: 1.125rem;
+    }
+    
+/*    .form1{
+        background-color: #333;
+        border: none;
+    }*/
+        
+
