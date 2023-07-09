@@ -3,16 +3,16 @@
     Created on : Jul 7, 2022, 1:28:09 PM
     Author     : Lenovo
 --%>
-<%@page import="com.Ecommerce.mycart.entities.User"%>
-<%
-  User user= (User)session.getAttribute("current-user");
+<%--<%@page import="com.Ecommerce.mycart.entities.User"%>--%>
+
+<!--  User user= (User)session.getAttribute("current-user");
   if(user==null){
       session.setAttribute("message", "you are not logged in!! login first");
       response.sendRedirect("login.jsp");
       return;
-  }%>
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
-<!DOCTYPE html>
+  }-->
+<%--<%@page contentType="text/html" pageEncoding="UTF-8"%>--%>
+<!--<!DOCTYPE html>
 <html>
     <head>
           <meta charset="UTF-8">
@@ -47,24 +47,24 @@
 
                             <div class="form-group">
                                 <label for="exampleInputEmail1" class="form-label">Email address</label>
-                                <input value="<%= user.getUserEmail()%>" type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter Email address">
+                                <input value="%= user.getUserEmail()%" type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter Email address">
                                 <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
                             </div>
 
                             <div class="form-group">
                                 <label for="name" class="form-label">Your Name</label>
-                                <input value="<%= user.getUserName()%>"type="text" class="form-control" id="name" aria-describedby="emailHelp" placeholder="Enter your Name">
+                                <input value="%= user.getUserName()%>"type="text" class="form-control" id="name" aria-describedby="emailHelp" placeholder="Enter your Name">
 
                             </div>
                                    <div class="form-group">
                                 <label for="name" class="form-label">phone number</label>
-                                <input value="<%= user.getUserPhone()%>"type="number" class="form-control" id="phone" aria-describedby="emailHelp" placeholder="Enter your Name">
+                                <input value="%= user.getUserPhone()%>"type="number" class="form-control" id="phone" aria-describedby="emailHelp" placeholder="Enter your Name">
 
                             </div>
 
                             <div class="form-group">
                                 <label for="Textarea" class="form-label">your Shipping Address</label>
-                                <textarea value="<%= user.getUserAddress()%>" id="form-control" class="form-control" rows="3" placeholder="Enter your address"></textarea>
+                                <textarea value="%= user.getUserAddress()%>" id="form-control" class="form-control" rows="3" placeholder="Enter your address"></textarea>
 
                             </div>
                             <div class="container text-center mt-3">
@@ -79,4 +79,4 @@
             </div>
         </div>
     </body>
-</html>
+</html>-->

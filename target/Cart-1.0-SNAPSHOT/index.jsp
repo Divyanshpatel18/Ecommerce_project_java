@@ -4,12 +4,22 @@
     Author     : Lenovo
          <h5>Hello World!</h5>
          <h5>Creating session factory</h>
-        <%
+--%>
+<%@page import="com.Ecommerce.mycart.dao.NewArrivalsDao"%>
+<%@page import="com.Ecommerce.mycart.entities.NewArrivals"%>
+<%@page import="com.Ecommerce.mycart.entities.CarouselProduct"%>
+<%@page import="com.Ecommerce.mycart.dao.CarouselProductDao"%>
+<%@page import="java.util.ArrayList"%>
+<!--        %
             out.println(FactoryProvider.getFactory()+"<br>");
             out.println(FactoryProvider.getFactory()+"<br>");
             out.println(FactoryProvider.getFactory());
-         %>
---%>
+            if(FactoryProvider.getFactory()!=null)
+            System.out.println("Successfully done");
+            else
+            System.out.println("failure");
+         %-->
+
 <%@page import="com.Ecommerce.mycart.entities.User"%>
 <%
     User user = (User) session.getAttribute("current-user");
@@ -30,8 +40,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>Ecommerce Electronics website</title>
+  
+    
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css" rel="stylesheet">
+
+    
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.5/dist/umd/popper.min.js"
         integrity="sha384-Xe+8cL9oJa6tN/veChSP7q+mnSPaj5Bcu9mPX5F5xIGE0DVittaqT5lorf0EI7Vk"
         crossorigin="anonymous"></script>
@@ -46,7 +60,14 @@
     <link rel="stylesheet" href="css/responsive-style.css">
     <link rel="stylesheet" href="css/toastmessage.css">  
 </head>
-
+                    
+<!--                    //fetching all the categories and producta-->
+                         <%
+                            CategoryDao dao=new CategoryDao(FactoryProvider.getFactory());
+                            List<Category> list=dao.getCategories();
+                              ProductDao pdao=new ProductDao(FactoryProvider.getFactory());
+                          
+                            %>
 <body data-bs-spy="scroll" data-bs-target=".navbar">
   
     <header>
@@ -82,7 +103,9 @@
                         <li class="nav-item">
                             <a class="nav-link" href="#blog">Blog</a>
                         </li>
-                                           <%                            if (user == null) {
+                        
+<!--                 //if no one is logged In  navbar should hava login and register options-->
+                   <%         if (user == null) {
                             %>
                             <li class="nav-item">
                                 <a class="nav-link" href="login.jsp">Login</a>
@@ -90,9 +113,25 @@
                             <li class="nav-item">
                                 <a class="nav-link" href="register.jsp">Register</a>
                             </li>
+                            
+                            
+<!--             else if any user or admin is logged in show options user/admin and logout-->
                             <%
-                            } else {
+                            } else if(user.getUserType().equals("admin")){
+                            %>
+                             <li class="nav-item">
+                                <a class="nav-link" href="admin.jsp">Admin Panel</a>
+                            </li>
+                             <li class="nav-item">
+                                <a class="nav-link" href="#"><%= user.getUserName()%></a>
+                            </li>
 
+                            <li class="nav-item">
+                                <a class="nav-link" href="LogoutServlet">Logout</a>
+                            </li>
+                            <%
+                            }
+                            else {
                             %>
                             <li class="nav-item">
                                 <a class="nav-link" href="#"><%= user.getUserName()%></a>
@@ -104,6 +143,7 @@
                             <%
                                 }
                             %>
+<!--                            //creating an cart icon and redirecting it to shopcart.jsp-->
                          <li class="nav-item">
                              <a class="nav-link" href="shopcart.jsp"><i class="fas fa-cart-plus" style="font-size:20px;"></i><span class="m1-0 cart-items">(0)</span></a>
                         </li>
@@ -114,55 +154,52 @@
         </nav>
     </header>
     <!-- Section 1 top banner  -->
-    
-    <section id="home">
-        <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
-            <div class="carousel-inner">
-                <div class="carousel-item active">
-                    <img src="bg/bg-1.jpg" class="d-block w-100" alt="img-1">
-                    <div class="carousel-caption text-center">
-                        <h1>upto 40% off</h1>
-                        <p>This is unique jewllery handcrafted island of Nantucket using teh Silver and Semi Precious
-                            stones Lorem ipsum dolor sit amet.</p>
-                          
+    <%        
+        
+                CarouselProductDao cdao=new CarouselProductDao(FactoryProvider.getFactory());
+                List<CarouselProduct> carouselproductlist=cdao.getAllProductsFromCarousel();
+                System.out.println("carousel product list in index.jsp "+carouselproductlist);
+    %>
+   <section id="home">
+    <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
+        <div class="carousel-inner">
+            <% for (int i = 0; i < carouselproductlist.size(); i++) {
+                CarouselProduct carouselproduct = carouselproductlist.get(i);
+                int carouselpId= carouselproduct.getCarouselId();
+                Product product=pdao.getProductById(carouselpId);
+                String activeClass = (i == 0) ? "active" : "";
+            %>
+            <div class="carousel-item <%= activeClass %>">
+                <img src="bg/<%= product.getpPhoto()%>" class="d-block w-100" alt="img-<%= (i + 1) %>">
+                <div class="carousel-caption text-center">
+                    <h1><%= product.getpName() %></h1>
+                    <p><%=  product.getpDesc() %></p>
+                    <a href="#"class="main-btn" onclick="add_to_cart(<%= product.getpId() %>,'<%= product.getpName() %>',<%= product.getPriceAfterApplyingDiscount()%>,'<%= product.getpDesc()%>',<%= product.getpDiscount()%>,'bg/<%= product.getpPhoto() %>','<%= product.getCategory().getCategoryTitle() %>')">Shop now</a>
 
-                            <a href="#" class=" main-btn">Shop now</a>
-                    </div>
-                </div>
-                <div class="carousel-item">
-                    <img src="bg/bg-2.jpg" class="d-block w-100" alt="img-2">
-                    <div class="carousel-caption text-center">
-                        <h1>upto 40% off</h1>
-                        <p>This is unique jewllery handcrafted island of Nantucket using teh Silver and Semi Precious
-                            stones</p>
-                        <a href="#" class="main-btn">Shop now</a>
-                    </div>
-                </div>
-                <div class="carousel-item">
-                    <img src="bg/bg-3.jpg" class="d-block w-100" alt="img-3">
-                    <div class="carousel-caption text-center">
-                        <h1>upto 40% off</h1>
-                        <p>This is unique jewllery handcrafted island of Nantucket using teh Silver and Semi Precious
-                            stones</p>
-                        <a href="#" class="main-btn">Shop now</a>
-                    </div>
                 </div>
             </div>
-            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls"
-                data-bs-slide="prev">
-                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                <span class="visually-hidden">Previous</span>
-            </button>
-            <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls"
-                data-bs-slide="next">
-                <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                <span class="visually-hidden">Next</span>
-            </button>
+            <% } %>
         </div>
-    </section>
+        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls"
+            data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls"
+            data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+        </button>
+    </div>
+</section>
 
     <!-- section 2 new arrivals      > -->
-
+    <%        
+        
+                NewArrivalsDao ndao=new NewArrivalsDao(FactoryProvider.getFactory());
+                List<NewArrivals> newArrivalsProductList=ndao.getAllProductsFromNewArrivals();
+                System.out.println("new arrivals product list in index.jsp "+newArrivalsProductList);
+      %>
     <section id="new-arrivals">
         <div class="new-arrivals wrapper">
 
@@ -175,49 +212,26 @@
                     </div>
                 </div>
                 <div class="row align-items-center">
+                    
+                    <% for (int i = 0; i < newArrivalsProductList.size(); i++) { 
+                    NewArrivals newArrival=newArrivalsProductList.get(i);
+                    int newArrivalId=newArrival.getNewArrivalId();
+                    Product product=pdao.getProductById(newArrivalId);
+                    %>
                     <div class="col-sm-4 col-12 p-sm-0 card-banner">
                         <div class="card-banner position-relative text-center">
                             <a href="#" class="card-thumb">
-                                <img src="img/img-1.jpg" class="image-fluid" alt="">
+                                <img src="img/<%= product.getpPhoto() %>" class="image-fluid" alt="">
                             </a>
                             <div class="banner-info text-center">
-                                <h2>BRACELETS</h2>
-                                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quod eos voluptatem, rem
-                                    dolorem corporis dolores amet.</p>
-                                <a href="#" class="main-btn">shop now</a>
-
+                                <h2> <%= product.getCategory().getCategoryTitle().toUpperCase() %> </h2>
+                                <p><%= product.getpDesc() %></p>
+                                <a href="#"class="main-btn" onclick="add_to_cart(<%= product.getpId() %>,'<%= product.getpName() %>',<%= product.getPriceAfterApplyingDiscount()%>,'<%= product.getpDesc()%>',<%= product.getpDiscount()%>,'bg/<%= product.getpPhoto() %>','<%= product.getCategory().getCategoryTitle() %>')">Shop now</a>
                             </div>
                         </div>
                     </div>
-                    <div class="col-sm-4 col-12 p-sm-0 card-banner">
-                        <div class="card-banner position-relative text-center">
-                            <a href="#" class="card-thumb">
-                                <img src="img/img-2.jpg" class="image-fluid" alt="">
-                            </a>
-                            <div class="banner-info text-center">
-                                <h2>RINGS</h2>
-                                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quod eos voluptatem, rem
-                                    dolorem corporis dolores amet.</p>
-                                <a href="#" class="main-btn">shop now</a>
-
-                            </div>
-                        </div>
-
-                    </div>
-                    <div class="col-sm-4 col-12 p-sm-0 card-banner">
-                        <div class="card-banner position-relative text-center">
-                            <a href="#" class="card-thumb">
-                                <img src="img/img-3.jpg" class="image-fluid" alt="">
-                            </a>
-                            <div class="banner-info text-center">
-                                <h2>EARRINGS</h2>
-                                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quod eos voluptatem, rem
-                                    dolorem corporis dolores amet.</p>
-                                <a href="#" class="main-btn">shop now</a>
-
-                            </div>
-                        </div>
-                    </div>
+                    <%}%>
+                    
                 </div>
             </div>
         </div>
@@ -236,15 +250,11 @@
                             qui, atque nisi totam sapiente e
                         </p>
                     </div>
-                    
-                         <%
-                            CategoryDao dao=new CategoryDao(FactoryProvider.getFactory());
-                            List<Category> list=dao.getCategories();
-                              ProductDao pdao=new ProductDao(FactoryProvider.getFactory());
-                          
-                            %>
+
                       
                     <div class="col-12">
+                        
+<!--                        //The ul below will print all the categories-->
                         <ul class="nav nav-tabs mb-3" id="myTab" role="tablist">
                                <%
                                   for(Category category:list){
@@ -261,11 +271,13 @@
                         </ul>
                                
                         <div class="tab-content " id="myTabContent">
+<!--                            //getCategoryTitle() is a getter in category class-->
                              <%   for(Category category:list){
                                   
                                              String catTitle= category.getCategoryTitle() ;
                                              List<Product> plist=pdao.getAllProductsByCat(catTitle);
                               %>
+                              
                             <div class="tab-pane fade  " id="<%= category.getCategoryTitle() %>" role="tabpanel"
                                 aria-labelledby="<%= category.getCategoryTitle() %>-tab">
                                 <div class="row">
@@ -294,6 +306,7 @@
                                                 <a href="#"><%= Helpdesc.getwords(product.getpDesc()) %></a>
                                             </h6>
                                             <div class="product-price">
+<!--                                                calling discount method from product class-->
                                                 <ins><span class="money text-white">$<%= product.getpPrice()%>     </span><span class="discount-given "> $<%= product.getPriceAfterApplyingDiscount()%>  <%= product.getpDiscount()%>% off</span></ins>
                                             </div>
                                             <div class="d-flex align-items-center justify-content-between py-1">
@@ -305,7 +318,7 @@
                                                     <i class=" far fa-star"></i>
                                                 </div>
                                                 <div class="basket">
-                                                   
+<!--                                                   //calling add to cart method defined in script.js onclicking cart icon,pass all arguements for corresponding parameters   -->
                                                     <a href="#"class="fas fa-shopping-basket" onclick="add_to_cart(<%= product.getpId() %>,'<%= product.getpName() %>',<%= product.getPriceAfterApplyingDiscount()%>,'<%= product.getpDesc()%>',<%= product.getpDiscount()%>,'images/img/gadgets/<%= product.getpPhoto() %>','<%= catTitle %>')"></a>
                                                 </div>
                                             </div>

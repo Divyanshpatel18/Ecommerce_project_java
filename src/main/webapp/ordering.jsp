@@ -4,6 +4,13 @@
     Author     : Lenovo
 --%>
 
+<%@page import="java.lang.String"%>
+<%@page import="java.io.BufferedReader"%>
+<%@page import="com.google.gson.Gson"%>
+<%@page import="java.util.Map"%>
+<%@page import="java.util.ArrayList"%>
+<%@page import="java.util.List"%>
+<%@page import="java.util.List"%>
 <%@page import="java.time.LocalDate"%>
 <%@page import="java.util.Calendar"%>
 <%@page import="java.text.DateFormat"%>
@@ -16,12 +23,15 @@
 --%>
 <%@page import="com.Ecommerce.mycart.entities.User"%>
 <%
+    //if user is logged in then only he is able to acess order page
     User user = (User) session.getAttribute("current-user");
     if (user == null) {
         session.setAttribute("message", "you are not logged in!! login first");
         response.sendRedirect("login.jsp");
         return;
-    }%>
+    }
+    System.out.println("call kon kar rha h bsdk ");
+%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -51,11 +61,30 @@
 
     </style>
     <body class="cart-body">
+
+<%
+        // Read the request body to retrieve the cart data
+        BufferedReader reader = request.getReader();
+        StringBuilder cartJsonStringBuilder = new StringBuilder();
+        String line;
+        while ((line = reader.readLine()) != null) {
+            cartJsonStringBuilder.append(line);
+        }
+        reader.close();
+    
+        // Parse the cart data
+             List<Map<String, Object>> cart =new ArrayList<>();
+        if (cartJsonStringBuilder.length() > 0) {
+            cart = new Gson().fromJson(cartJsonStringBuilder.toString(), ArrayList.class);
+        }
+     System.out.println("after string builder"+cart);
+%>
+
         <header>
             <nav class="navbar navbar-expand-lg navigation">
                 <div class="container">
                     <a class="navbar-brand" href="#"><img src="download.jpg" alt="" height="50 " width="50"></a>
-                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                    <button class="navbar-toggler text-white" type="button" data-bs-toggle="collapse"
                             data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
                             aria-expanded="false" aria-label="Toggle navigation">
                         <!-- <span class="navbar-toggler-icon"></span> -->
@@ -79,18 +108,18 @@
                                 <a class="nav-link" href="index.jsp#blog">Blog</a>
                             </li>
 
-                            <%                            if (user == null) {
-                            %>
+        <%   if (user == null) {
+        %>
                             <li class="nav-item">
                                 <a class="nav-link" href="login.jsp">Login</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" href="register.jsp">Register</a>
                             </li>
-                            <%
-                            } else {
+         <%
+           } else {
 
-                            %>
+         %>
                             <li class="nav-item">
                                 <a class="nav-link" href="#"><%= user.getUserName()%></a>
                             </li>
@@ -98,9 +127,9 @@
                             <li class="nav-item">
                                 <a class="nav-link" href="LogoutServlet">Logout</a>
                             </li>
-                            <%
-                                }
-                            %>
+            <%
+              }
+             %>
 
                             <li class="nav-item">
                                 <a class="nav-link" href="shopcart.jsp"><i class="fas fa-cart-plus" style="font-size:20px;"></i><span class="m1-0 cart-items">()</span></a>
@@ -146,7 +175,7 @@
                             </form>
 
                         </div>
-                        <div class="col-md-12 col-lg-8 col-11 mx-auto main_cart mb-lg-0 mb-5 shadow scriptdiv">
+                        <div class="col-md-12 col-lg-8 col-11 mx-auto main_cart mb-lg-0 mb-5 shadow " id="scriptdiv">
 
                         </div>
 
@@ -198,14 +227,16 @@
                                     <h3 class="  delivery ">Expected Delivery Date</h3>
 
                                     <p class=" delivery ">
-                                        <%
+        <%
+            Date currentDate=new Date();
 
-                                            SimpleDateFormat sdf = new SimpleDateFormat("dd-MMM-yyyy");
-                                            Calendar cal = Calendar.getInstance();
-                                            cal.add(Calendar.DAY_OF_MONTH, 7);
-                                            String newDate = sdf.format(cal.getTime());
-                                            out.println(newDate);
-//                                         %>
+            SimpleDateFormat sdf = new SimpleDateFormat("dd-MMM-yyyy");
+            Calendar cal = Calendar.getInstance();
+            cal.add(Calendar.DAY_OF_MONTH, 7);
+            String newDate = sdf.format(cal.getTime());
+            out.println(newDate);
+            String todayDate=sdf.format(currentDate);
+        %>
                                     </p>
                                 </div>
                             </div>
@@ -222,6 +253,61 @@
     <div id="toast" class="">
 
     </div>
+     <form  action="PlaceOrderServlet" method="post" class=" form1" style="background-color:white;">
+      <div class="mb-3">
+        <label for="orderId" class="form-label">Order ID</label>
+        <input type="text" name="orderId" class="form-control" id="orderId" placeholder="Enter order ID">
+      </div>
+        <div class="mb-3">
+        <label for="orderDate" class="form-label">Order Date</label>
+        <input  value="<%=todayDate%>" name="orderDate" class="form-control" id="orderDate">
+      </div>
+        <div class="mb-3">
+        <label for="orderDeliveryDate" class="form-label">Order Delivery Date</label>
+        <input  value="<%=newDate%>"  name="orderDeliveryDate" class="form-control" id="orderDeliveryDate">
+      </div>
+      <div class="mb-3">
+        <label for="orderAddress" class="form-label">Order Address</label>
+        <input value="<%= user.getUserAddress()%>"  name="orderAddress" class="form-control" id="orderAddress" placeholder="Enter order address">
+      </div>
+      <div class="mb-3">
+        <label for="orderAmount" class="form-label">Order Amount</label>
+        <input type="text" name="orderAmount" class="form-control" id="myOrderAmount" placeholder="Enter order amount">
+      </div>
+
+      <div class="mb-3">
+        <label for="orderUser" class="form-label">Order User</label>
+        <input value="<%= user.getUserId()%>" name="orderUserId" class="form-control" id="orderUser" placeholder="Enter order user">
+      </div>
+      <div class="mb-3">
+        <label for="orderStatus" class="form-label">Order Status</label>
+        <select class="form-select" id="orderStatus">
+          <option value="pending">Pending</option>
+          <option value="processing">Processing</option>
+          <option value="shipped">Shipped</option>
+          <option value="delivered">Delivered</option>
+        </select>
+      </div>
+      
+<!--      %
+         System.out.println(cart.size());
+         System.out.println(cart);
+         for (Map<String, Object> product : cart) {
+             System.out.println("product id are fisdgfkgsgfgadgfkgdhgfgafvai "+product.get("productId"));
+       %-->
+<!--       <div class="mb-3">
+       <input name="productListSize" value="%= product.size() %>" class="form-control" id="productListSize" placeholder="Enter productListSize">
+     </div>-->
+   <% if(cart!=null && !cart.isEmpty()){%>
+    <div class="mb-3">
+       <label for="productIdOrder" class="form-label">Enter Products Id</label>
+       <input value="<%= cart %>"  <%System.out.println("inside "+cart); %>  name="cart" class="form-control" id="productIdOrder" placeholder="Enter productIdOrder">
+     </div>
+     
+   <% } %>
+
+      <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
 </body>
 <script src="js/script.js"></script>
 <script src="js/cartscript.js"></script>

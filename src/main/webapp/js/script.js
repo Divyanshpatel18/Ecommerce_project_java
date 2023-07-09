@@ -1,71 +1,116 @@
 var itemQuantity1 = 1;
 var itemPrice = 0;
 
+//creating a fuction to add item to the cart
+
 function add_to_cart(pid, pname, price, desc, discount, photo, category)
 {
     var cart = localStorage.getItem("cart");
-    if (cart == null) {
+    if (cart === null) {
 
         //no cart yet
+        //creating empty products array
         let products = [];
+        
+        //all the corresponding values are set as parameter passed from shopcart.jsp
         let product = {productId: pid, productName: pname, productQuantity: 1, productPrice: price, productDesc: desc, productDiscount: discount, productPic: photo, productCategory: category};
         products.push(product);
+        
+        //converting the products array into the string and adding it to localstorage
         localStorage.setItem("cart", JSON.stringify(products));
+        
 //        console.log("product is added for the first time");
         showToast("Item is added to cart");
     } else {
-        // cart is already present
-        let pcart = JSON.parse(cart);
-        let oldProduct = pcart.find((item) => item.productId == pid);
-        if (oldProduct) {
-            //only we have to increase the quantity
-            oldProduct.productQuantity = oldProduct.productQuantity + 1;
-            pcart.map((item) => {
-                if (item.productId == oldProduct.productId) {
-                    item.productQuantity = oldProduct.productQuantity;
-                    var x = item.productQuantity * item.productPrice;
 
-                }
-//                 $(".myprice-indivi").html(item.productQuantity * item.productPrice);  
-            });
-            localStorage.setItem("cart", JSON.stringify(pcart));
-//            console.log("product Quantity is increased");
+            // cart is already present ,var cart = localStorage.getItem("cart"); will return stirng
+            //converting into javascript object
+            let pcart = JSON.parse(cart);
 
-            showToast(oldProduct.productName + " product Quantity is increased, Quantity=" + oldProduct.productQuantity);
-        } else {
-            //we have to add the product
-            let product = {productId: pid, productName: pname, productQuantity: 1, productPrice: price, productDesc: desc, productDiscount: discount, productPic: photo, productCategory: category};
-            pcart.push(product);
-            localStorage.setItem("cart", JSON.stringify(pcart));
-//            console.log("product is added");
-            showToast("product is added");
-        }
+            //callback function to find if product is already present
+            //                    id stored in productId in array    passed Id as arguement
+            let oldProduct = pcart.find((item) => item.productId === pid);
+
+            // if old product present i.e. true
+            if (oldProduct) {
+                    //only we have to increase the quantity
+                    oldProduct.productQuantity = oldProduct.productQuantity + 1;
+
+                    //pushing the increased quantity into the product which is same as oldproduct
+                    pcart.map((item) => {
+                        if (item.productId === oldProduct.productId) {
+                            item.productQuantity = oldProduct.productQuantity;
+                            var x = item.productQuantity * item.productPrice;
+
+                        }
+        //                 $(".myprice-indivi").html(item.productQuantity * item.productPrice);  
+                    });
+                    localStorage.setItem("cart", JSON.stringify(pcart));
+        //            console.log("product Quantity is increased");
+
+                showToast(oldProduct.productName + " product Quantity is increased, Quantity=" + oldProduct.productQuantity);
+            } else {
+                    //we have to add the product
+                    let product = {productId: pid, productName: pname, productQuantity: 1, productPrice: price, productDesc: desc, productDiscount: discount, productPic: photo, productCategory: category};
+                    pcart.push(product);
+                    localStorage.setItem("cart", JSON.stringify(pcart));
+        //            console.log("product is added");
+                    showToast("product is added");
+            }
     }
+    
+    //when product is added ,the cart will be updated
+    //update cart is called here to update cart icon count and shopcart
     updateCart();
 
 }
 
 
 //UPDATE CART
+//It will fetch the data from localstorage and will pass to shopcart.jsp for dynamic data
 
-function updateCart() {
+ function updateCart() {
+//    getting the cart which is in string format and coverting it  to JSON and storingin cart objecy
     let cartString = localStorage.getItem("cart");
     let cart = JSON.parse(cartString);
-    if (cart == null || cart.length == 0) {
+    var cartJsonString = JSON.stringify(cart);
+   
+   if(window.location.pathname.endsWith('/ordering.jsp')){
+//     Use AJAX to send the cart data to the ordering.jsp page
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', 'ordering.jsp');
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.send(cartJsonString);
+    }
+
+//    var element=document.getElementById("no-items-id");   
+    //if cart object is empty
+    if (cart === null || cart.length === 0) {
         console.log("cart is empty");
+        
+        //setting the shop icon count to 0 
         $(".cart-items").html("(0)");
+        
+////           var Template=document.getElementById("template-true");
+//           
+////        setting the shopcart body to  CART DOES NOT HAVE ANY ITEM
         $(".no-items").html(`
             <h2 class='no-cart'>Cart does not have any Item<h2>\n\ 
               <div class='text-center mt-4'>
                    <button onclick='window.location.href="index.jsp#products"' class='btn btn-outline-primary'>Continue Shopping</button>
-             </div>
+            </div>
             <div class="container ">
             <img src="images/img/cart3.png" class="img-fluid " >
-            </div>`);
+           </div>`);
+                  
     } else {
         console.log(cart);
-        $(".cart-items").html(`( ${cart.length} )`);
+//         var Template=document.getElementById("template-false");
+        
+       //setting the cart icon count with cart.length
+        $(".cart-items").html(`( ${cart.length} )`);          
         localStorage.setItem("totalItems", cart.length);
+   
 //    cart.map((item)=> {
 //            $(".product-name").html(` ${item.productName} `);
 //            $("#itemval1").html(` ${item.productPrice} `);
@@ -78,11 +123,12 @@ function updateCart() {
 //             document.getElementsByClassName("total-items")[0].innerText=x;
 //              console.log(x);
 //    });
+  
         let card = ``;
-        var totalproductprice = 0;
+        var totalproductprice =0;
         cart.map((item) => {
             var itemquan = "item" + (`${item.productId}`);
-
+                            
             card = card + `<div class="card  first-product  mb-3 p-4">
                             <h2 class="py-4 font-weight-bold product-category">${item.productCategory}</h2>
                             <div class="row">
@@ -138,38 +184,55 @@ function updateCart() {
                                 </div>
                             </div>
                         </div>
-    `;
+           
+    `;    
+            //ensures the it run only when the dom is fully loaded
+            $(document).ready(function(){
+              $("#scriptdiv").html(card);  
+               
+            //total price is calculated by multiplying each product with its quantity and adding them all
             totalproductprice = totalproductprice + parseInt(item.productPrice * item.productQuantity);
-
+            });
         });
-        $(".scriptdiv").html(card);
+        
+         //ensures the it run only when the dom is fully loaded
+         $(document).ready(function(){
 
         $("#total-product-amt").html(totalproductprice);
         $("#total-cart-amount").html(totalproductprice + 50);
+        $("#myOrderAmount").val(totalproductprice + 50);
 //        document.getElementById("total-product-amt").innerHTML = totalproductprice;
 //        document.getElementById("total-cart-amount").innerHTML = totalproductprice + 50;
-
-
-        console.log(totalproductprice);
-
+         });
+        
+        console.log("total cart amount: "+totalproductprice);
+         
     }
-
+     
+//     var clone= document.importNode(Template.content,true);
+//     element.appendChild(clone);
+     
 }
-
+//when document will be ready then only updateCart will be called
+//on reload update will be called
 $(document).ready(function () {
     updateCart();
-})
+});
 
 //go to checkout
-function goToCheckout() {
-    window.location = "checkout.jsp";
-}
+//function goToCheckout() {
+//    window.location = "checkout.jsp";
+//}
 
 //DELETE ITEM FROM CART
+//will take an pid to delete
 function deleteItemFromCart(pid) {
     let cart = JSON.parse(localStorage.getItem("cart"));
-    let newcart = cart.filter((item) => item.productId != pid);
+    
+    //the product which not satisfies the condition will not be in newcart ie our pid product to be deleted
+    let newcart = cart.filter((item) => item.productId !== pid);
     localStorage.setItem("cart", JSON.stringify(newcart));
+    //calling the updateCart to save changes after removing element
     updateCart();
     showToast("Item is removed from the cart");
 }
@@ -188,12 +251,14 @@ const discountcode = () => {
         let amt_after_discount = totalcuramt - 15;
         total_cart_amt.innerHTML = amt_after_discount;
         codevalidation.innerHTML = " Hurray! code applied";
+          $("#myOrderAmount").val(amt_after_discount);
     } else {
 
         codevalidation.innerHTML = "code expired";
     }
+    
 };
-
+                       //product name ,productquantity,productprice,productId
 const decreasenumber = (incrDecrBoxClass, itemPriceBoxClass, productPrice, productId) => {
     var itemval = document.getElementById(incrDecrBoxClass);
     var itemprice = document.getElementById(itemPriceBoxClass);
@@ -209,12 +274,12 @@ const decreasenumber = (incrDecrBoxClass, itemPriceBoxClass, productPrice, produ
     } else {
         var cart = localStorage.getItem("cart");
         let pcart = JSON.parse(cart);
-        let oldProduct = pcart.find((item) => item.productId == productId);
+        let oldProduct = pcart.find((item) => item.productId === productId);
         if (oldProduct) {
-            //only we have to increase the quantity
+            //only we have to decrease the quantity
             oldProduct.productQuantity = oldProduct.productQuantity - 1;
             pcart.map((item) => {
-                if (item.productId == oldProduct.productId) {
+                if (item.productId === oldProduct.productId) {
                     item.productQuantity = oldProduct.productQuantity;
                 }
             });
@@ -239,6 +304,7 @@ const decreasenumber = (incrDecrBoxClass, itemPriceBoxClass, productPrice, produ
 //       console.log(itemPrice1);
 
     }
+    updateCart();
 };
 const increasenumber = (incrDecrBoxClass, itemPriceBoxClass, productPrice, productId) => {
     var itemval = document.getElementById(incrDecrBoxClass);
@@ -281,13 +347,13 @@ const increasenumber = (incrDecrBoxClass, itemPriceBoxClass, productPrice, produ
 //     localStorage.setItem("itemPrice",itemprice.innerHTML);
 //         let itemPrice1= localStorage.getItem("itemPrice");
 //       console.log(itemPrice1);
-
+        updateCart();
     }
 
-}
+};
 
 
-//TOAST
+//TOAST function to display the message
 function showToast(content) {
     $("#toast").addClass("display1");
     $("#toast").html(content);

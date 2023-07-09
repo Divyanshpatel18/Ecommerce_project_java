@@ -4,15 +4,17 @@
         <hibernate-configuration>
             <session-factory>
                 <property name="connection.driver_class">com.mysql.jdbc.Driver</property>
-                <property name="connection.url">jdbc:mysql://localhost:3306/mycart</property>
-                <property name="connection.username">root</property>
-                <property name="connection.password">divi1321</property>
-                <property name="dialect">org.hibernate.dialect.MySQL57Dialect</property>
+                <property name="connection.url">jdbc:mysql://localhost:3306/'YOUR_DATABASE_NAME'</property>
+                <property name="connection.username">YOUR_DATABASE_USERNAME</property>
+                <property name="connection.password">YOUR_DATABASE_PASSWORD</property>
+                <property name="dialect">org.hibernate.dialect.MySQL8Dialect</property>
                 <property name="hbm2ddl.auto">update</property>
                 <property name="show_sql">true</property>
                 <mapping class="com.Ecommerce.mycart.entities.User" />
                 <mapping class="com.Ecommerce.mycart.entities.Category" />
                 <mapping class="com.Ecommerce.mycart.entities.Product" />
                 <mapping class="com.Ecommerce.mycart.entities.Order" />
+                <mapping class="com.Ecommerce.mycart.entities.CarouselProduct" />
+                <mapping class="com.Ecommerce.mycart.entities.NewArrivals" />
             </session-factory>
         </hibernate-configuration>

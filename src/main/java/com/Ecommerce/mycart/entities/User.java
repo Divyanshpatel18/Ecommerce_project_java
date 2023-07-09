@@ -5,9 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-
-    import javax.persistence.GenerationType;
+import javax.persistence.GeneratedValue; 
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
@@ -33,11 +32,11 @@ public class User {
   
     @Column( length = 15,name = "user_Type")
     private String userType;
-    //
+   
     
-//    @OneToMany(mappedBy = "user")
-//    List<Order> orders=new ArrayList<>();
- //
+    @OneToMany(mappedBy = "user")
+    List<Order> orders=new ArrayList<>();
+
     
     
     public User( String userName, String userEmail, String userPassword, String userPhone, String userPic, String userAddress,String userType) {
@@ -88,9 +87,7 @@ public class User {
         this.userType = userType;
     }
 
-//    public void setOrders(List<Order> orders) {
-//        this.orders = orders;
-//    }
+
 
     public int getUserId() {
         return userId;
@@ -124,9 +121,13 @@ public class User {
         return userType;
     }
 
-//    public List<Order> getOrders() {
-//        return orders;
-//    }
+    public List<Order> getOrders() {
+        return orders;
+    }
+
+    public void setOrders(List<Order> orders) {
+        this.orders = orders;
+    }
 
 
     

@@ -22,24 +22,29 @@ public class LoginServlet extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
-            //coding area
+            //getting email and password from login page
             String email = request.getParameter("email");
             String password = request.getParameter("password");
             
             //AUTHENTICATION USER
             UserDao userDao=new UserDao(FactoryProvider.getFactory());
+            
+            //calling userDao class method to get user from database if it is present otherwise null
            User user= userDao.getUserByEmailAndPassword(email, password);
            
+           
+           //sending the message through session
             HttpSession httpSession = request.getSession();
         
           if(user==null){
-        httpSession.setAttribute("message", "Invalid Details");
-          response.sendRedirect("login.jsp");
-          return;
+            httpSession.setAttribute("message", "Invalid Details! ");
+            response.sendRedirect("login.jsp");
+            return;
         }
           else{
-             out.println("<h1> Welcome"+user.getUserName()+"</h1>");
+//             out.println("<h1> Welcome"+user.getUserName()+"</h1>");
              //login
+             //setting the current-user key with value=user which we got in user object by calling getUserByEmailAndPassword
              httpSession.setAttribute("current-user", user);
              
              if(user.getUserType().equals("admin"))

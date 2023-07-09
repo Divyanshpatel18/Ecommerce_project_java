@@ -12,8 +12,10 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 
 @Entity
 public class Product {
@@ -29,10 +31,12 @@ public class Product {
     private int pQuantity;
     @ManyToOne
     private Category category;
-    //
-//    @ManyToMany(mappedBy = "products")
-//    private List<Order> orders=new ArrayList<>();
-//
+    
+    @ManyToMany(mappedBy = "products")
+    private List<Order> orders=new ArrayList<>();
+    
+
+
     
     //CALCULATE PRICE AFTER DISCOUNT
     public int getPriceAfterApplyingDiscount(){
@@ -50,6 +54,7 @@ public class Product {
         this.pDiscount = pDiscount;
         this.pQuantity = pQuantity;
         this.category=category;
+//        this.order=order;
     }
 
     public int getpId() {
@@ -112,8 +117,23 @@ public class Product {
         return category;
     }
 
+    public Product( String pName, String pDesc, String pPhoto, int pDiscount) {
+        this.pName = pName;
+        this.pDesc = pDesc;
+        this.pPhoto = pPhoto;
+        this.pDiscount = pDiscount;
+    }
+
     public void setCategory(Category category) {
         this.category = category;
+    }
+
+    public List<Order> getOrders() {
+        return orders;
+    }
+
+    public void setOrders(List<Order> orders) {
+        this.orders = orders;
     }
 
     @Override

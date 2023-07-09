@@ -37,20 +37,23 @@ public class RegisterServlet extends HttpServlet {
                     return;
                 }
 
-                //creating user object to create data
+                //creating user object to store user data
                User user= new User(userName, userEmail, userPassword, userPhone,"default.jpg" , userAddress,"normal");
                 Session hibernateSession= FactoryProvider.getFactory().openSession();
                 Transaction tx = hibernateSession.beginTransaction();
-                
+                //will return an Id and this id can be used for getting user details
                int userId= (int) hibernateSession.save(user);
                
                tx.commit();               
                 hibernateSession.close();
                 
-               
+               //sending message to messaged.jsp through send redirect
                 HttpSession httpSession = request.getSession();
+                
+                // String 'message' will have="Registration successfull userId is 1"
                 httpSession.setAttribute("message", "Registration Successful!!userId is:"+ userId);
                
+                //redirecting to messaged.jsp
                 response.sendRedirect("messaged.jsp");
 
             } catch (Exception e) {

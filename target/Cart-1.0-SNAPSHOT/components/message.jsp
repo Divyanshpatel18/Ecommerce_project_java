@@ -12,10 +12,10 @@
            
  %>
  
-        <div class="alert alert-danger d-flex align-items-center" role="alert">
+        <div class="alert alert-danger d-flex align-items-center justify-content-center" role="alert">
             <i class="fas-solid fas-triangle-exclamation"></i>
             <div>
-                <strong><%= message%> </strong> 
+                <strong> <%= message%> </strong> 
             </div>
        </div>
             

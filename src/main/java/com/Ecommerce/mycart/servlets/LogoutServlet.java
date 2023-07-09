@@ -20,6 +20,7 @@ public class LogoutServlet extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
             HttpSession httpSession = request.getSession();
+            // after logging out removing value of current user and redirecting to login.jso
             httpSession.removeAttribute("current-user");
             response.sendRedirect("index.jsp");
             

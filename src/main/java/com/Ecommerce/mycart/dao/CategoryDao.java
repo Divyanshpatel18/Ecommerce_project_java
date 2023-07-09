@@ -15,6 +15,8 @@ public class CategoryDao {
     public CategoryDao(SessionFactory factory) {
         this.factory = factory;
     }
+    
+    //creating a method for saving category into db,will return id
     public int saveCategory(Category cat){
       
         Session session = this.factory.openSession();
@@ -25,6 +27,7 @@ public class CategoryDao {
         session.close();
         return catId;
     }
+    //To get all the categories to be chosen from Product form list options
     public List<Category> getCategories(){
         Session s = this.factory.openSession();
         Query query=s.createQuery("from Category");
@@ -36,11 +39,28 @@ public class CategoryDao {
          Category cat=null;
         try {
             Session session = this.factory.openSession();
+            //using get method to get category by id
             cat = session.get(Category.class, cid);
              session.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
         return cat;
+    }
+     public void deleteCategoryById(int categoryId) {
+        try {
+        Session session = this.factory.openSession();
+        Transaction tx = session.beginTransaction();
+            Query query = session.createQuery("delete from Category where categoryId = :id");
+            query.setParameter("id", categoryId);
+            int rowsAffected = query.executeUpdate();
+            tx.commit();
+            session.close();
+            System.out.println(rowsAffected + " row(s) deleted.");
+            
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
